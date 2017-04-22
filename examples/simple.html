@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simple</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="../build/d3-gtimeline.js"></script>  
+    <style type="text/css">
+
+    </style>    
+</head>
+<body>
+
+
+<div id="chart"></div>
+
+<script type="text/javascript">
+var chart = d3.timeline(),
+	data = [
+        [ 'Washington', '', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
+        [ 'Adams',      '', new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
+        [ 'Jefferson',  '', new Date(1801, 2, 4),  new Date(1809, 2, 4) ]
+    ];
+
+d3.select('#chart').datum(data).call(chart);
+
+</script>
+
+</body>
+</html>
