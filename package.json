@@ -1,0 +1,35 @@
+{
+  "name": "d3-gtimeline",
+  "version": "0.0.1",
+  "description": "Google-like timeline chart",
+  "keywords": [
+    "d3",
+    "d3-module",
+    "timeline",
+    "d3-chart"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "build/d3-gtimeline.js",
+  "jsnext:main": "index",
+  "homepage": "https://github.com/jjagielka/d3-gtimeline",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jjagielka/d3-gtimeline.git"
+  },
+  "scripts": {
+    "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-gtimeline.js -- index.js",
+    "test": "tape 'test/**/*-test.js'",
+    "prepublish": "npm run test && es6-arrow-function build/d3-gtimeline.js | uglifyjs -c -m -o build/d3-gtimeline.min.js",
+    "postpublish": "zip -j build/d3-gtimeline.zip -- LICENSE README.md build/d3-gtimeline.js build/d3-gtimeline.min.js"
+  },
+  "dependencies": {
+    "d3": "4",
+    "moment": "2.18.1"
+  },
+  "devDependencies": {
+    "rollup": "0.41.6",
+    "tape": "4.6.3",
+    "es6-arrow-function":"0.6.6",
+    "uglify-js": "2.8.22"
+  }
+}
