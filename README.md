@@ -20,7 +20,7 @@ var chart = d3.timeline(),
         [ 'Jefferson',  '', new Date(1801, 2, 4),  new Date(1809, 2, 4) ]
     ];
 
-d3.select('div').data().call(chart);
+d3.select('div').datum(data).call(chart);
 ```
 
 <img alt="Simple Chart" src="https://raw.githubusercontent.com/jjagielka/d3-gtimeline/master/img/simple.png" width="975" height="133">
@@ -47,7 +47,7 @@ var chart = d3.timeline(),
       [ 'Secretary of State', 'James Madison', new Date(1801, 4, 2), new Date(1809, 2, 3)]
     ];
 
-d3.select('div').data().call(chart);
+d3.select('div').datum(data).call(chart);
 ```
 
 <img alt="Presidents Chart" src="https://raw.githubusercontent.com/jjagielka/d3-gtimeline/master/img/presidents.png" width="976" height="132">
