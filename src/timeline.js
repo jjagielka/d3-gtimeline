@@ -25,8 +25,9 @@ function textColor(value) {
 }
 
 export default function() {
-    var colors = ['#FFF','#EEE'],
+    var colors = google_colors,
         padding = 5,
+        reversed = false,
         dates,
         const_width,
         labels = (d) => d[0],
@@ -53,7 +54,7 @@ export default function() {
             data = selection.datum(),
             rows = d3.map(data, labels).keys(),
             tip = new tooltip(tooltip_html),
-            cScale = d3.scaleOrdinal(google_colors);
+            cScale = d3.scaleOrdinal(colors);
 
         dates = dates || [d3.min(data, starts), d3.max(data, ends)];
 
@@ -62,6 +63,7 @@ export default function() {
                 height = rows.length * (getFontSize(this) + 4*padding),
                 yScale = d3.scaleBand().domain(rows).range([0, height]), //.padding(0.1),
                 xScale = d3.scaleTime().domain(dates),
+                yAxis = (reversed? timelineAxisRight: timelineAxisLeft)(yScale).width(width),
                 svg = d3.select(this).append('svg').attr('class', 'timeline');
 
             svg.attr('width', width);
@@ -69,7 +71,6 @@ export default function() {
             
             var g = svg.append('g');
 
-            var yAxis = timelineAxisLeft(yScale).width(width); //.offset(300);
             var yGroup = g.append('g')
                 .attr('class', 'y axis')
                 .call(yAxis);
@@ -121,10 +122,11 @@ export default function() {
         });
     }
 
-    chart.dates   = function(_) { return arguments.length? (dates = _, chart): dates; };
-    chart.width   = function(_) { return arguments.length? (const_width = _, chart): const_width; };
-    chart.colors  = function(_) { return arguments.length? (colors = _, chart): colors; };
-    chart.padding = function(_) { return arguments.length? (padding = _, chart): padding; };
+    chart.dates    = function(_) { return arguments.length? (dates = _, chart): dates; };
+    chart.width    = function(_) { return arguments.length? (const_width = _, chart): const_width; };
+    chart.colors   = function(_) { return arguments.length? (colors = _, chart): colors; };
+    chart.padding  = function(_) { return arguments.length? (padding = _, chart): padding; };
+    chart.reversed = function(_) { return arguments.length? (reversed = _, chart): reversed; };
 
     return chart;
 
