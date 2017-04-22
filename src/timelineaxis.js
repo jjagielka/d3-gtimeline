@@ -12,6 +12,7 @@ function timelineAxis(orient, scale) {
         padding = 5,
         range,
         line_color = '#AAA',
+        trim = 40,
         width = 100;
 
     function max_text_width(selection) {
@@ -26,10 +27,10 @@ function timelineAxis(orient, scale) {
 
     function axis(selection) {
         var domain = scale.domain(),
-            tip = new tooltip(identity),
+            tip = tooltip(identity),
             colorscale = d3.scaleOrdinal(colors),
             invertscale = d3.scaleOrdinal(colors.reverse()),
-            labels = trim_long_string(40),
+            labels = trim_long_string(trim),
             row = selection.selectAll('.row').data(domain, scale).order(),
             rowEnter = row.enter().append('g').attr('class', 'row'),
             rowExit = row.exit(),
@@ -86,6 +87,7 @@ function timelineAxis(orient, scale) {
     axis.colors  = function(_) { return arguments.length? (colors  = _, axis): colors };
     axis.padding = function(_) { return arguments.length? (padding = _, axis): padding };
     axis.range   = function(_) { return arguments.length? (range   = _, axis): range };
+    axis.trim    = function(_) { return arguments.length? (trim    = _, axis): trim };
 
     return axis;
 }

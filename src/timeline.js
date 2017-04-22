@@ -122,6 +122,7 @@ export default function() {
         });
     }
 
+    //chart.axis     = function(_) { return arguments.length? (axis  = _, chart): axis ; };
     chart.dates    = function(_) { return arguments.length? (dates = _, chart): dates; };
     chart.width    = function(_) { return arguments.length? (const_width = _, chart): const_width; };
     chart.colors   = function(_) { return arguments.length? (colors = _, chart): colors; };
@@ -135,6 +136,6 @@ export default function() {
 		return  '<b>'+ names(d) + '</b>' + 
         '<hr style="margin: 2px 0 2px 0">' +
         format(starts(d)) + ' - ' + format(ends(d)) + '<br>' +
-        'Duration: ' + durationFormat(starts(d), ends(d));
+        durationFormat(starts(d), ends(d));
     }
 }

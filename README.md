@@ -55,7 +55,7 @@ d3.select('div').datum(data).call(chart);
 
 <a name="timeline_width" href="#timeline_width">#</a> <i>timeline</i>.<b>width</b>([<i>value</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L125 "Source")
 
-Returns or sets explicit width of the chart. If this value is <i>undefined</i> width of the chart is adapted to the width of the parent node.
+Returns or sets explicit width of the chart. If this value is <i>undefined</i>, width of the chart is adapted to the width of the parent node.
 
 <a name="timeline_padding" href="#timeline_padding">#</a> <i>timeline</i>.<b>padding</b>([<i>value</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L128 "Source")
 
