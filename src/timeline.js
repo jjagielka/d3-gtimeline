@@ -35,10 +35,10 @@ export default function() {
         dates,
         const_width,
         duration = 1000,
-        labels = d => d[0],
-        names  = d => d[1],
-        starts = d => d[2],
-        ends   = d => d[3];
+        labels = f(0),
+        names  = f(1),
+        starts = f(2),
+        ends   = f(3);
 
     function trim_text(d, i) {
         var task = d3.select(this),
@@ -56,17 +56,6 @@ export default function() {
                     text.text(ratio < 1? string.substring(0, Math.floor(string.length * ratio)): string);
                 }
             });
-    }
-
-    function trim_text1(argument) {
-      var task = d3.select(this),
-          string = names(d),
-          width = task.select('rect').attr('width') - 2*padding,
-          text = task.select('text'), //.text(string),
-          ratio = width / text.node().getComputedTextLength();
-
-      if(ratio < 1)
-          text.text(string.substring(0, Math.floor(string.length * ratio)));
     }
 
     function chart(selection) {
@@ -147,7 +136,6 @@ export default function() {
                 .transition().duration(duration)
                 .attr("transform", d => translate(xScale(starts(d)), yScale(labels(d))))
                 .on('start', trim_text)
-                //.on('end', trim_text)
                 .selectAll('rect')
                     .attr('width', d => xScale(ends(d)) - xScale(starts(d)));
 
