@@ -34,13 +34,31 @@ export default function() {
         today = false,
         dates,
         const_width,
-        duration = 300,
-        labels = f(0),
-        names  = f(1),
-        starts = f(2),
-        ends   = f(3);
+        duration = 1000,
+        labels = d => d[0],
+        names  = d => d[1],
+        starts = d => d[2],
+        ends   = d => d[3];
 
     function trim_text(d, i) {
+        var task = d3.select(this),
+            text = task.select('text'),
+            rect = task.select('rect'),
+            string = names(d),
+            text_width = text.node().getComputedTextLength();  
+
+        d3.active(this)
+            .tween('text', function () {
+                return function (t) {
+                    var width = rect.attr('width') - 2*padding,
+                        ratio = width / text_width;
+
+                    text.text(ratio < 1? string.substring(0, Math.floor(string.length * ratio)): string);
+                }
+            });
+    }
+
+    function trim_text1(argument) {
       var task = d3.select(this),
           string = names(d),
           width = task.select('rect').attr('width') - 2*padding,
@@ -105,8 +123,8 @@ export default function() {
                 .attr('height', yScale.bandwidth() - 2*padding)
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
-                .style('fill', d => cScale(names(d)));
-                ;
+//                .style('fill', d => cScale(names(d)));
+                .style('fill', names.wrap(cScale));
 
             tasks_enter
                 .append('text')
@@ -128,7 +146,8 @@ export default function() {
             tasks
                 .transition().duration(duration)
                 .attr("transform", d => translate(xScale(starts(d)), yScale(labels(d))))
-                .on('end', trim_text)
+                .on('start', trim_text)
+                //.on('end', trim_text)
                 .selectAll('rect')
                     .attr('width', d => xScale(ends(d)) - xScale(starts(d)));
 
@@ -156,8 +175,8 @@ export default function() {
         var format = d3.isoParse.wrap(d3.timeFormat("%Y-%m-%d"));
         var format = compose(d3.isoParse, d3.timeFormat("%Y-%m-%d"));
 		return  '<b>'+ names(d) + '</b>' + 
-        '<hr style="margin: 2px 0 2px 0">' +
-        format(starts(d)) + ' - ' + format(ends(d)) + '<br>' +
-        durationFormat(starts(d), ends(d));
+                '<hr style="margin: 2px 0 2px 0">' +
+                format(starts(d)) + ' - ' + format(ends(d)) + '<br>' +
+                durationFormat(starts(d), ends(d));
     }
 }
