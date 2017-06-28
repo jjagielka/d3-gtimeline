@@ -16,12 +16,12 @@ function timelineAxis(orient, scale) {
         width = 100;
 
     function max_text_width(selection) {
-        return d3.max(selection.nodes().map((d)=>d.getComputedTextLength()));
+        return d3.max(selection.nodes().map(d => d.getComputedTextLength()));
     }
 
     function trim_long_string(value) {
         return function(d){
-            return d.length>value? d.slice(0,value-1)+'\u2026': d
+            return d.length > value? d.slice(0, value-1)+'\u2026': d
         }
     }
 
