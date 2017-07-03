@@ -34,25 +34,25 @@ export default function() {
         today = false,
         dates,
         const_width,
-        duration = 1000,
+        duration = 0,
         labels = f(0),
         names  = f(1),
         starts = f(2),
         ends   = f(3);
 
     function trim_text(d, i) {
-        var task = d3.select(this),
+        var task = d3.select(this.parentNode),
             text = task.select('text'),
             rect = task.select('rect'),
             string = names(d),
             text_width = text.node().getComputedTextLength();  
 
+        // this is overkill if duration is 0
         d3.active(this)
             .tween('text', function () {
-                return function (t) {
+                return function(t) {
                     var width = rect.attr('width') - 2*padding,
                         ratio = width / text_width;
-
                     text.text(ratio < 1? string.substring(0, Math.floor(string.length * ratio)): string);
                 }
             });
@@ -112,7 +112,6 @@ export default function() {
                 .attr('height', yScale.bandwidth() - 2*padding)
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
-//                .style('fill', d => cScale(names(d)));
                 .style('fill', names.wrap(cScale));
 
             tasks_enter
@@ -135,9 +134,9 @@ export default function() {
             tasks
                 .transition().duration(duration)
                 .attr("transform", d => translate(xScale(starts(d)), yScale(labels(d))))
-                .on('start', trim_text)
                 .selectAll('rect')
-                    .attr('width', d => xScale(ends(d)) - xScale(starts(d)));
+                    .attr('width', d => xScale(ends(d)) - xScale(starts(d)))
+                .on('start', trim_text);
 
             if(today) 
                 selection.append('path')
@@ -161,7 +160,7 @@ export default function() {
     function tooltip_html(d,i) {
         //var format = (d)=>d3.timeFormat("%Y-%m-%d")(d3.isoParse(d));
         var format = d3.isoParse.wrap(d3.timeFormat("%Y-%m-%d"));
-        var format = compose(d3.isoParse, d3.timeFormat("%Y-%m-%d"));
+//        var format = compose(d3.isoParse, d3.timeFormat("%Y-%m-%d"));
 		return  '<b>'+ names(d) + '</b>' + 
                 '<hr style="margin: 2px 0 2px 0">' +
                 format(starts(d)) + ' - ' + format(ends(d)) + '<br>' +

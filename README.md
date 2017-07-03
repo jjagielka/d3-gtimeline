@@ -55,19 +55,27 @@ d3.select('div').datum(data).call(chart);
 
 <img alt="Presidents Chart" src="https://raw.githubusercontent.com/jjagielka/d3-gtimeline/master/img/presidents.png" width="976" height="132">
 
-<a name="timeline_width" href="#timeline_width">#</a> <i>timeline</i>.<b>width</b>([<i>value</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L125 "Source")
+<a name="timeline_width" href="#timeline_width">#</a> <i>timeline</i>.<b>width</b>([<i>value</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L152 "Source")
 
 Returns or sets explicit width of the chart. If this value is <i>null</i>, width of the chart is adapted to the width of the parent node.
 
-<a name="timeline_padding" href="#timeline_padding">#</a> <i>timeline</i>.<b>padding</b>([<i>value</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L128 "Source")
+<a name="timeline_padding" href="#timeline_padding">#</a> <i>timeline</i>.<b>padding</b>([<i>value</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L151 "Source")
 
 Returns or sets padding value for elements in the timeline.
 
-<a name="timeline_colors" href="#timeline_colors">#</a> <i>timeline</i>.<b>colors</b>([<i>array</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L127 "Source")
+<a name="timeline_today" href="#timeline_today">#</a> <i>timeline</i>.<b>today</b>([<i>value</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L151 "Source")
+
+Returns or sets a boolean value to show/hide the today line on the timescale. Default: <i>false</i>.
+
+<a name="timeline_duration" href="#timeline_duration">#</a> <i>timeline</i>.<b>duration</b>([<i>value</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L151 "Source")
+
+Returns or sets the duration of the horizontal animation. Default: <i>0</i>.
+
+<a name="timeline_colors" href="#timeline_colors">#</a> <i>timeline</i>.<b>colors</b>([<i>array</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L152 "Source")
 
 Returns or sets array containing colors to be used. Default colorset contains Google colors.
 
-<a name="timeline_reversed" href="#timeline_reversed">#</a> <i>timeline</i>.<b>reversed</b>([<i>boolean</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L129 "Source")
+<a name="timeline_reversed" href="#timeline_reversed">#</a> <i>timeline</i>.<b>reversed</b>([<i>boolean</i>]) [<>](https://github.com/jjagielka/d3-gtimeline/blob/master/src/timeline.js#L152 "Source")
 
 If <i>true</i> flips the chart and shows the labels on the right side. Default value is <i>false</i> i.e. left side labels.
 
