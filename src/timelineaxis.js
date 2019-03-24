@@ -4,7 +4,17 @@ function identity(x) {
     return x;
 }
 
-var right = 1,
+function max_text_width(selection) {
+    return d3.max(selection.nodes().map(d => d.getComputedTextLength()));
+}
+
+function trim_long_string(value) {
+    return function(d){
+        return d.length > value? d.slice(0, value-1)+'\u2026': d
+    }
+}
+
+const right = 1,
     left = 2;
 
 function timelineAxis(orient, scale) {
@@ -14,16 +24,6 @@ function timelineAxis(orient, scale) {
         line_color = '#AAA',
         trim = 40,
         width = 100;
-
-    function max_text_width(selection) {
-        return d3.max(selection.nodes().map(d => d.getComputedTextLength()));
-    }
-
-    function trim_long_string(value) {
-        return function(d){
-            return d.length > value? d.slice(0, value-1)+'\u2026': d
-        }
-    }
 
     function axis(selection) {
         var domain = scale.domain(),
@@ -77,7 +77,7 @@ function timelineAxis(orient, scale) {
             .attr('d','M'+(offset+.5)+',0.5V'+scale.range()[1]);
     }
 
-    axis.draw_ticks = function(selection, ticks) { 
+    axis.draw_ticks = function(selection, ticks) {
         selection.selectAll('.row').select('path')
             .attr('d', ticks.map((t)=> 'M'+t+','+1+'v'+(scale.bandwidth()-1)).join(''));
     }

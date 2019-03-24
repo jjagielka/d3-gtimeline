@@ -2,13 +2,13 @@ import {timelineAxisLeft, timelineAxisRight} from "./timelineaxis";
 import tooltip from "./tooltip";
 import {durationFormat, compose, f} from "./utils";
 
-var google_colors = [ 
-	"#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#5e97f5", "#e06055", 
+var google_colors = [
+	"#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#5e97f5", "#e06055",
 	"#f5bf26", "#33ab71", "#b762c6", "#00acc1", "#ff855f", "#9e9d24", "#26b8ca", "#ff7043"];
 
 function getFontSize(element){
     var style = window.getComputedStyle(element, null).getPropertyValue('font-size');
-    return parseFloat(style); 
+    return parseFloat(style);
 }
 
 function luma_BT709(c) {
@@ -45,13 +45,13 @@ export default function() {
             text = task.select('text'),
             rect = task.select('rect'),
             string = names(d),
-            text_width = text.node().getComputedTextLength();  
+            text_width = text.node().getComputedTextLength();
 
         // this is overkill if duration is 0
         d3.active(this)
             .tween('text', function () {
                 return function(t) {
-                    var width = rect.attr('width') - 2*padding,
+                    const width = rect.attr('width') - 2*padding,
                         ratio = width / text_width;
                     text.text(ratio < 1? string.substring(0, Math.floor(string.length * ratio)): string);
                 }
@@ -59,13 +59,16 @@ export default function() {
     }
 
     function chart(selection) {
-        var 
+        const
             data = selection.datum(),
             rows = d3.map(data, labels).keys(),
             tip = new tooltip(tooltip_html),
             cScale = d3.scaleOrdinal(colors);
 
         dates = dates || [d3.min(data, starts), d3.max(data, ends)];
+
+        if(today)
+            dates = [new Date(Math.min(dates[0], new Date())), new Date(Math.max(dates[1], new Date()))];
 
         selection.each(function(data){
             var width = const_width || this.getBoundingClientRect().width,
@@ -77,7 +80,7 @@ export default function() {
 
             svg.attr('width', width);
             svg.attr('height', height + 20); // margin.bottom
-            
+
             var g = svg.append('g');
 
             var yGroup = g.append('g')
@@ -95,7 +98,7 @@ export default function() {
             xGroup.select('.domain').remove();
             xGroup.selectAll('.tick line').attr('stroke', '#AAA');
 
-            var ticks = xScale.ticks().map(xScale);        
+            var ticks = xScale.ticks().map(xScale);
             yGroup.call(yAxis.draw_ticks, ticks);
 
             var tasks = g.selectAll('g.task').data(data);
@@ -138,11 +141,11 @@ export default function() {
                     .attr('width', d => xScale(ends(d)) - xScale(starts(d)))
                 .on('start', trim_text);
 
-            if(today) 
-                selection.append('path')
+            if(today)
+                g.append('path')
                     .attr('stroke', 'red')
                     .attr('d','M'+xScale(new Date)+',0.5V'+height);
-            
+
         });
     }
 
@@ -161,7 +164,7 @@ export default function() {
         //var format = (d)=>d3.timeFormat("%Y-%m-%d")(d3.isoParse(d));
         var format = d3.isoParse.wrap(d3.timeFormat("%Y-%m-%d"));
 //        var format = compose(d3.isoParse, d3.timeFormat("%Y-%m-%d"));
-		return  '<b>'+ names(d) + '</b>' + 
+		return  '<b>'+ names(d) + '</b>' +
                 '<hr style="margin: 2px 0 2px 0">' +
                 format(starts(d)) + ' - ' + format(ends(d)) + '<br>' +
                 durationFormat(starts(d), ends(d));

@@ -1,6 +1,6 @@
 {
   "name": "d3-gtimeline",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Google-like timeline chart",
   "keywords": [
     "d3",
@@ -29,7 +29,7 @@
   "devDependencies": {
     "rollup": "0.41.6",
     "tape": "4.6.3",
-    "es6-arrow-function":"0.6.6",
+    "es6-arrow-function": "0.6.6",
     "uglify-js": "2.8.22"
   }
 }

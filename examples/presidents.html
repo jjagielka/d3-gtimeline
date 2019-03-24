@@ -3,9 +3,9 @@
 <head>
       <title>Presidents</title>
     <meta charset="utf-8">
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/5.9.0/d3.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <script src="../build/d3-gtimeline.js"></script>      
+    <script src="../build/d3-gtimeline.js"></script>
     <style type="text/css">
       div.tooltip {
         position: absolute;
@@ -22,6 +22,9 @@
 <body>
 <h1>US Presidents</h1>
 <div id="chart"></div>
+
+<h1>US Presidents with today mark.</h1>
+<div id="chart2"></div>
 
 <script type="text/javascript">
 data = [
@@ -44,6 +47,9 @@ data = [
 
 var chart = d3.timeline(); //.margin({top: 20, right: 20, bottom: 40, left: 50});
 d3.selectAll('#chart').datum(data).call(chart);
+
+var chart2 = d3.timeline().today(true);
+d3.selectAll('#chart2').datum(data).call(chart2);
 
 </script>
 </body>
