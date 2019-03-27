@@ -1,6 +1,6 @@
 {
   "name": "d3-gtimeline",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Google-like timeline chart",
   "keywords": [
     "d3",
@@ -23,8 +23,7 @@
     "postpublish": "zip -j build/d3-gtimeline.zip -- LICENSE README.md build/d3-gtimeline.js build/d3-gtimeline.min.js"
   },
   "dependencies": {
-    "d3": "4",
-    "moment": ">=2.19.3"
+    "d3": "4"
   },
   "devDependencies": {
     "rollup": "0.41.6",

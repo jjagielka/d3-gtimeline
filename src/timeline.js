@@ -1,6 +1,6 @@
 import {timelineAxisLeft, timelineAxisRight} from "./timelineaxis";
 import tooltip from "./tooltip";
-import {durationFormat, compose, f} from "./utils";
+import {durationFormat, pipe, f} from "./utils";
 
 var google_colors = [
 	"#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#5e97f5", "#e06055",
@@ -68,7 +68,7 @@ export default function() {
         dates = dates || [d3.min(data, starts), d3.max(data, ends)];
 
         if(today)
-            dates = [new Date(Math.min(dates[0], new Date())), new Date(Math.max(dates[1], new Date()))];
+            dates = d3.extent(dates.concat(new Date()));
 
         selection.each(function(data){
             var width = const_width || this.getBoundingClientRect().width,
@@ -89,6 +89,7 @@ export default function() {
 
             var range = yAxis.range();
             xScale.range([range[0]+padding, range[1]-padding]).clamp(true);
+
             var xAxis = d3.axisBottom(xScale);
             var xGroup = g.append('g')
                 .attr('class', 'x axis')
@@ -115,12 +116,14 @@ export default function() {
                 .attr('height', yScale.bandwidth() - 2*padding)
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
-                .style('fill', names.wrap(cScale));
+                .style('fill', pipe(names, cScale));
 
             tasks_enter
                 .append('text')
                 .attr("text-anchor", "start")
-                .attr('fill', d => textColor(cScale(names(d))))
+                // .attr('fill', d => textColor(cScale(names(d))))
+                // .attr('fill', compose(textColor, cScale, names))
+                .attr('fill', pipe(names, cScale, textColor))
                 .attr('pointer-events', 'none')
                 .attr('dx', padding)
                 .attr('y', yScale.bandwidth()/2)
@@ -144,7 +147,7 @@ export default function() {
             if(today)
                 g.append('path')
                     .attr('stroke', 'red')
-                    .attr('d','M'+xScale(new Date)+',0.5V'+height);
+                    .attr('d','M'+xScale(new Date())+',0.5V'+height);
 
         });
     }
@@ -161,9 +164,7 @@ export default function() {
     return chart;
 
     function tooltip_html(d,i) {
-        //var format = (d)=>d3.timeFormat("%Y-%m-%d")(d3.isoParse(d));
-        var format = d3.isoParse.wrap(d3.timeFormat("%Y-%m-%d"));
-//        var format = compose(d3.isoParse, d3.timeFormat("%Y-%m-%d"));
+        var format = pipe(d3.isoParse, d3.timeFormat("%Y-%m-%d"));
 		return  '<b>'+ names(d) + '</b>' +
                 '<hr style="margin: 2px 0 2px 0">' +
                 format(starts(d)) + ' - ' + format(ends(d)) + '<br>' +

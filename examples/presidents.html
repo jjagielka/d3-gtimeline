@@ -45,7 +45,7 @@ data = [
       [ 'Secretary of State', 'James Madison', new Date(1801, 4, 2), new Date(1809, 2, 3)]
 ];
 
-var chart = d3.timeline(); //.margin({top: 20, right: 20, bottom: 40, left: 50});
+var chart = d3.timeline().duration(500); //.margin({top: 20, right: 20, bottom: 40, left: 50});
 d3.selectAll('#chart').datum(data).call(chart);
 
 var chart2 = d3.timeline().today(true);
