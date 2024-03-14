@@ -1,5 +1,9 @@
+import { select } from "d3-selection";
 
-var css = 'div.tooltip {\
+const d3 = { select };
+
+const css =
+  "div.tooltip {\
         position: absolute;\
         text-align: center;\
         padding: 5px;\
@@ -8,34 +12,25 @@ var css = 'div.tooltip {\
         border: 1px solid #AAA;\
         border-radius: 2px;\
         pointer-events: none;\
-      }';
+      }";
 
 export default function (html_func) {
+  d3.select("head").selectAll("#tooltip").data([1]).enter().append("style").attr("id", "tooltip").text(css);
 
-    d3.select('head')
-        .selectAll('#tooltip').data([1]).enter()
-            .append('style')
-            .attr('id', 'tooltip')
-            .text(css);
+  const selection = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
 
-    var selection = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
-  
-    selection.show = function(){
-        selection.transition()
-            .duration(100)
-            .style("opacity", .95);
-        selection.html(html_func.apply(null, arguments))
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
-    };
+  selection.show = function (event) {
+    console.log("show", arguments);
+    selection.transition().duration(100).style("opacity", 0.95);
+    selection
+      .html(html_func.apply(null, arguments))
+      .style("left", event.pageX + "px")
+      .style("top", event.pageY - 28 + "px");
+  };
 
-    selection.hide = function(d){
-        selection.transition()
-            .duration(100)
-            .style("opacity", 0);
-    }
+  selection.hide = function (d) {
+    selection.transition().duration(100).style("opacity", 0);
+  };
 
-    return selection;
+  return selection;
 }
