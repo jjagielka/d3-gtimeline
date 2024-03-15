@@ -67,8 +67,10 @@ export default function () {
       let text_width = text.node().getComputedTextLength();
 
       if (text_width > rect_width) {
-        const ratio = rect_width < 0 ? 0 : rect_width / text_width;
-        text.text(string.slice(0, Math.floor(string.length * ratio)));
+        const ratio = rect_width < 0 ? 0 : rect_width / text_width,
+          length = Math.floor(string.length * ratio);
+
+        text.text(length > 2 ? string.slice(0, length - 2) + "…" : "");
       }
     });
   }
@@ -120,7 +122,7 @@ export default function () {
       yGroup.on("offset", () => {
         range = yAxis.range();
         xScale.range([range[0] + padding, range[1] - padding]).clamp(true);
-        xAxis.ticks(Math.min((range[1] - range[0]) / 50, 10));
+        xAxis.ticks(Math.min((range[1] - range[0]) / 70, 10));
         xGroup.call(xAxis);
         tasks
           .attr("transform", (d) => translate(xScale(starts(d)), yScale(labels(d))))

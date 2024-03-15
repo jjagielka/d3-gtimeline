@@ -1,6 +1,6 @@
 {
   "name": "d3-gtimeline",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Google-like timeline chart",
   "keywords": [
     "d3",
@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
@@ -31,7 +31,6 @@
     "d3-time-format": "^4.1.0",
     "d3-transition": "^3.0.1",
     "dayjs": "^1.11.10",
-    "typescript": "^5.2.2",
     "vite": "^5.1.6"
   }
 }
