@@ -1,6 +1,4 @@
-import { select } from "d3-selection";
-
-const d3 = { select };
+import * as d3 from "d3";
 
 const css =
   "div.tooltip {\
