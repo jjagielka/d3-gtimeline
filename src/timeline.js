@@ -55,19 +55,28 @@ export default function () {
     starts = f(2),
     ends = f(3);
 
-  function trim_text(d, i) {
-    const task = d3.select(this.parentNode),
-      text = task.select("text"),
-      rect = task.select("rect"),
-      string = names(d),
-      text_width = text.node().getComputedTextLength();
+  function trim_text(selection) {
+    selection.each(function (d, i) {
+      const task = d3.select(this.parentNode),
+        text = task.select("text"),
+        rect = task.select("rect"),
+        rect_width = rect.attr("width") - 2 * padding,
+        string = names(d);
 
+      text.text(string);
+      let text_width = text.node().getComputedTextLength();
+
+      if (text_width > rect_width) {
+        const ratio = rect_width < 0 ? 0 : rect_width / text_width;
+        text.text(string.slice(0, Math.floor(string.length * ratio)));
+      }
+    });
+  }
+  function tween_text(d, i) {
     // this is overkill if duration is 0
     d3.active(this).tween("text", function () {
       return function (t) {
-        const width = rect.attr("width") - 2 * padding,
-          ratio = width / text_width;
-        text.text(ratio < 1 ? string.substring(0, Math.floor(string.length * ratio)) : string);
+        trim_text(d3.select(this));
       };
     });
   }
@@ -89,10 +98,10 @@ export default function () {
         yAxis = (reversed ? timelineAxisRight : timelineAxisLeft)(yScale).width(width),
         svg = d3.select(this).selectAll("svg").data([1]).join("svg");
 
-      //   svg.enter().append("svg").attr("class", "timeline");
-      svg.attr("class", "timeline");
-      svg.attr("width", width);
-      svg.attr("height", height + 20); // margin.bottom
+      svg
+        .attr("class", "timeline")
+        .attr("width", width)
+        .attr("height", height + 20); // margin.bottom
 
       const g = svg.append("g");
 
@@ -109,15 +118,15 @@ export default function () {
         .call(xAxis);
 
       yGroup.on("offset", () => {
-        // yGroup.call(yAxis);
         range = yAxis.range();
         xScale.range([range[0] + padding, range[1] - padding]).clamp(true);
+        xAxis.ticks(Math.min((range[1] - range[0]) / 50, 10));
         xGroup.call(xAxis);
         tasks
           .attr("transform", (d) => translate(xScale(starts(d)), yScale(labels(d))))
           .selectAll("rect")
           .attr("width", (d) => xScale(ends(d)) - xScale(starts(d)))
-          .on("start", trim_text);
+          .call(trim_text);
 
         yGroup.call(yAxis.draw_ticks, xScale.ticks().map(xScale));
       });
@@ -167,7 +176,7 @@ export default function () {
         .attr("transform", (d) => translate(xScale(starts(d)), yScale(labels(d))))
         .selectAll("rect")
         .attr("width", (d) => xScale(ends(d)) - xScale(starts(d)))
-        .on("start", trim_text);
+        .on("start", tween_text);
 
       if (today)
         g.append("path")

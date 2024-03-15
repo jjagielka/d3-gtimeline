@@ -15,7 +15,7 @@ const right = 1,
   left = 2;
 
 function timelineAxis(orient, scale) {
-  let colors = ["#FFF", "#EEE"],
+  let colors = ["#FFF", "#EEE"], // alternate rows colors
     padding = 5,
     range,
     line_color = "#AAA",
