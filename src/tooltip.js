@@ -20,7 +20,6 @@ export default function (html_func) {
   const selection = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
 
   selection.show = function (event) {
-    console.log("show", arguments);
     selection.transition().duration(100).style("opacity", 0.95);
     selection
       .html(html_func.apply(null, arguments))

@@ -87,8 +87,10 @@ export default function () {
         yScale = d3.scaleBand().domain(rows).range([0, height]), //.padding(0.1),
         xScale = d3.scaleTime().domain(dates),
         yAxis = (reversed ? timelineAxisRight : timelineAxisLeft)(yScale).width(width),
-        svg = d3.select(this).append("svg").attr("class", "timeline");
+        svg = d3.select(this).selectAll("svg").data([1]).join("svg");
 
+      //   svg.enter().append("svg").attr("class", "timeline");
+      svg.attr("class", "timeline");
       svg.attr("width", width);
       svg.attr("height", height + 20); // margin.bottom
 
@@ -96,7 +98,7 @@ export default function () {
 
       const yGroup = g.append("g").attr("class", "y axis").call(yAxis);
 
-      const range = yAxis.range();
+      let range = yAxis.range();
       xScale.range([range[0] + padding, range[1] - padding]).clamp(true);
 
       const xAxis = d3.axisBottom(xScale);
@@ -105,6 +107,20 @@ export default function () {
         .attr("class", "x axis")
         .attr("transform", translate(0, height))
         .call(xAxis);
+
+      yGroup.on("offset", () => {
+        // yGroup.call(yAxis);
+        range = yAxis.range();
+        xScale.range([range[0] + padding, range[1] - padding]).clamp(true);
+        xGroup.call(xAxis);
+        tasks
+          .attr("transform", (d) => translate(xScale(starts(d)), yScale(labels(d))))
+          .selectAll("rect")
+          .attr("width", (d) => xScale(ends(d)) - xScale(starts(d)))
+          .on("start", trim_text);
+
+        yGroup.call(yAxis.draw_ticks, xScale.ticks().map(xScale));
+      });
 
       xGroup.select(".domain").remove();
       xGroup.selectAll(".tick line").attr("stroke", "#AAA");

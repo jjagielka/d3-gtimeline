@@ -1,10 +1,6 @@
 import * as d3 from "./d3";
 import tooltip from "./tooltip";
 
-function identity(x) {
-  return x;
-}
-
 function max_text_width(selection) {
   return d3.max(selection.nodes().map((d) => d.getComputedTextLength()));
 }
@@ -24,11 +20,12 @@ function timelineAxis(orient, scale) {
     range,
     line_color = "#AAA",
     trim = 40,
-    width = 100;
+    width = 100,
+    offset = undefined;
 
   function axis(selection) {
     let domain = scale.domain(),
-      tip = tooltip(identity),
+      tip = tooltip((x) => x),
       colorscale = d3.scaleOrdinal(colors),
       invertscale = d3.scaleOrdinal(colors.reverse()),
       labels = trim_long_string(trim),
@@ -65,9 +62,10 @@ function timelineAxis(orient, scale) {
       )
       .text(labels);
 
-    let offset = max_text_width(texts) + 2 * padding;
-    offset = orient === right ? width - offset : offset;
-
+    if (offset === undefined) {
+      offset = max_text_width(texts) + 2 * padding;
+      offset = orient === right ? width - offset : offset;
+    }
     range = orient === right ? [0, offset] : [offset, width];
 
     texts
@@ -75,10 +73,26 @@ function timelineAxis(orient, scale) {
       .attr("dx", orient === right ? padding : -padding)
       .attr("x", offset);
 
+    const dragged = function (event, d) {
+      offset = Math.max(10, Math.min(width - 10, offset + event.dx));
+
+      // rerender
+      d3.select(this).attr("d", "M" + offset + ",0.5V" + scale.range()[1]);
+      texts.attr("x", offset);
+      range = orient === right ? [0, offset] : [offset, width];
+
+      selection.dispatch("offset", { detail: { offset } });
+    };
+
     selection
-      .append("path")
+      .selectAll("g.y.axis > path")
+      .data([1])
+      .join("path")
       .attr("stroke", line_color)
-      .attr("d", "M" + (offset + 0.5) + ",0.5V" + scale.range()[1]);
+      .attr("stroke-width", 1.75)
+      .attr("d", "M" + (offset + 0.5) + ",0.5V" + scale.range()[1])
+      .style("cursor", "ew-resize")
+      .call(d3.drag().on("drag", dragged));
   }
 
   axis.draw_ticks = function (selection, ticks) {
@@ -105,6 +119,9 @@ function timelineAxis(orient, scale) {
   };
   axis.trim = function (_) {
     return arguments.length ? ((trim = _), axis) : trim;
+  };
+  axis.offset = function (_) {
+    return arguments.length ? ((offset = _), axis) : offset;
   };
 
   return axis;

@@ -1,27 +1,12 @@
-import * as d3 from "d3-time";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
-window.dayjs = dayjs;
 
 export function durationFormat(start, end) {
-  // if moment.js is available use it's humaize function.
-  // if (moment) return moment.duration(end - start).humanize();
-  console.log(start, end);
-  console.log(end - start);
-  // return "n days";
   return dayjs.duration(end - start).humanize();
-  const seconds = d3.timeSecond.count(start, end),
-    cut_off = 2;
-  if (seconds < cut_off * 60) return seconds + "s";
-  else if (seconds < cut_off * 60 * 60) return d3.timeMinute.count(start, end) + " min";
-  else if (seconds < cut_off * 60 * 60 * 24) return d3.timeHour.count(start, end) + " hours";
-  else if (seconds < cut_off * 3600 * 24 * 30) return d3.timeDay.count(start, end) + " day(s)";
-  else if (seconds < cut_off * 3600 * 24 * 365) return d3.timeMonth.count(start, end) + " month(s)";
-  else return d3.timeYear.count(start, end) + " year(s)";
 }
 
 export function pipe() {
