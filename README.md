@@ -1,6 +1,6 @@
 # d3-gtimeline
 
-Google-like timeline chart.
+Google-like timeline chart. [Demo](https://jjagielka.github.io/d3-gtimeline).
 
 ## Installing
 
