@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import tooltip from "./tooltip";
 
 function max_text_width(selection) {

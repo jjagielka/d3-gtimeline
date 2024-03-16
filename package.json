@@ -9,9 +9,23 @@
     "d3-chart"
   ],
   "type": "module",
-  "main": "dist/d3-gtimeline.js",
+  "files": [
+    "dist/*.js",
+    "dist/*.cjs",
+    "src/**/*.js"
+  ],
+  "main": "dist/d3-gtimeline.umd.cjs",
+  "module": "dist/d3-gtimeline.js",
   "license": "BSD-3-Clause",
   "homepage": "https://github.com/jjagielka/d3-gtimeline",
+  "exports": {
+    ".": {
+      "umd": "./dist/d3-gtimeline.umd.cjs",
+      "default": "./src/index.js",
+      "import": "./dist/d3-gtimeline.js",
+      "require": "./dist/d3-gtimeline.umd.cjs"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jjagielka/d3-gtimeline.git"
@@ -26,14 +40,22 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite -c vite.config.full.js build",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "d3-array": "3",
+    "d3-axis": "3",
+    "d3-color": "3",
+    "d3-drag": "3",
+    "d3-scale": "4",
+    "d3-selection": "3",
+    "d3-time": "3",
+    "d3-time-format": "^4.1.0",
+    "d3-transition": "^3.0.1",
     "vite": "^5.1.6"
   },
   "dependencies": {
-    "d3": "^7.9.0",
     "dayjs": "^1.11.10"
   }
 }
