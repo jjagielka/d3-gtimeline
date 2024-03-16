@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import { timelineAxisLeft, timelineAxisRight } from "./timelineaxis";
 import tooltip from "./tooltip";
 import { durationFormat, f, pipe } from "./utils";
