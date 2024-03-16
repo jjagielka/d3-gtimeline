@@ -8,7 +8,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
 index.html
 main.ts
 pnpm-lock.yaml
