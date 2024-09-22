@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Presidents</title>
+  <meta charset="utf-8">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/5.9.0/d3.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="../dist/d3-gtimeline.full.umd.cjs" type="text/javascript"></script>
+  <style type="text/css">
+    div.tooltip {
+      position: absolute;
+      text-align: center;
+      padding: 5px;
+      font: 12px sans-serif;
+      background: white;
+      border: 1px solid #AAA;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>US Presidents - presidential term starts</h1>
+  <div id="chart"></div>
+
+  <script type="text/javascript">
+    data = [
+      ['President', 'George Washington', new Date(1789, 3, 30), new Date(1789, 3, 30)],
+      ['President', 'John Adams', new Date(1797, 2, 4), new Date(1797, 2, 4)],
+      ['President', 'Thomas Jefferson', new Date(1801, 2, 4), new Date(1801, 2, 4)],
+      ['Vice President', 'John Adams', new Date(1789, 3, 21), new Date(1789, 3, 21)],
+      ['Vice President', 'Thomas Jefferson', new Date(1797, 2, 4), new Date(1797, 2, 4)],
+      ['Vice President', 'Aaron Burr', new Date(1801, 2, 4), new Date(1801, 2, 4)],
+      ['Vice President', 'George Clinton', new Date(1805, 2, 4), new Date(1805, 2, 4)],
+      ['Secretary of State', 'John Jay', new Date(1789, 8, 25), new Date(1789, 8, 25)],
+      ['Secretary of State', 'Thomas Jefferson', new Date(1790, 2, 22), new Date(1790, 2, 22)],
+      ['Secretary of State', 'Edmund Randolph', new Date(1794, 0, 2), new Date(1794, 0, 2)],
+      ['Secretary of State', 'Timothy Pickering', new Date(1795, 7, 20), new Date(1795, 7, 20)],
+      ['Secretary of State', 'Charles Lee', new Date(1800, 4, 13), new Date(1800, 4, 13)],
+      ['Secretary of State', 'John Marshall', new Date(1800, 5, 13), new Date(1800, 5, 13)],
+      ['Secretary of State', 'Levi Lincoln', new Date(1801, 2, 5), new Date(1801, 2, 5)],
+      ['Secretary of State', 'James Madison', new Date(1801, 4, 2), new Date(1801, 4, 2)]
+    ];
+
+    const chart = d3.timeline().duration(500); //.margin({top: 20, right: 20, bottom: 40, left: 50});
+    d3.selectAll('#chart').datum(data).call(chart);
+
+  </script>
+</body>
+
+</html>
