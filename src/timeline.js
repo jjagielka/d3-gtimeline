@@ -45,6 +45,7 @@ function translate(x, y) {
 export default function () {
   let colors = google_colors,
     padding = 5,
+    milestone_width = 2,
     reversed = false,
     today = false,
     dates,
@@ -55,32 +56,50 @@ export default function () {
     starts = f(2),
     ends = f(3);
 
-  function trim_text(selection) {
+  function trim_text_to_rect(task, d) {
+    const text = task.select("text"),
+      rect = task.select("rect"),
+      rect_width = rect.attr("width") - 2 * padding,
+      string = names(d);
+
+    text.text(string);
+    let text_width = text.node().getComputedTextLength();
+
+    if (text_width > rect_width) {
+      const ratio = rect_width < 0 ? 0 : rect_width / text_width,
+        length = Math.floor(string.length * ratio);
+
+      text.text(length > 2 ? string.slice(0, length - 2) + "…" : "");
+    }
+  }
+
+  function add_text_background(task, d, yAxis) {
+    const text_node = task.select("text").node(),
+      bbox = text_node.getBBox(),
+      index = yAxis.scale().domain().indexOf(labels(d)),
+      color = yAxis.colorscale()(index);
+
+    const bckg = task.selectAll("rect.bckg").data([d]).join('rect').attr('class', 'bckg')
+      .attr('fill', color).attr('x', bbox.x - padding + milestone_width).attr('y', bbox.y - 2).attr('width', bbox.width + padding - milestone_width).attr('height', bbox.height);
+    task.node().insertBefore(bckg.node(), text_node)
+  }
+
+  function trim_text(selection, yAxis) {
     selection.each(function (d, i) {
-      const task = d3.select(this.parentNode),
-        text = task.select("text"),
-        rect = task.select("rect"),
-        rect_width = rect.attr("width") - 2 * padding,
-        string = names(d);
-
-      text.text(string);
-      let text_width = text.node().getComputedTextLength();
-
-      if (text_width > rect_width) {
-        const ratio = rect_width < 0 ? 0 : rect_width / text_width,
-          length = Math.floor(string.length * ratio);
-
-        text.text(length > 2 ? string.slice(0, length - 2) + "…" : "");
-      }
+      const task = d3.select(this.parentNode);
+      ends(d) - starts(d) ? trim_text_to_rect(task, d) : add_text_background(task, d, yAxis);
     });
   }
-  function tween_text(d, i) {
-    // this is overkill if duration is 0
-    d3.active(this).tween("text", function () {
-      return function (t) {
-        trim_text(d3.select(this));
-      };
-    });
+
+  function tween_text(yAxis) {
+    return function (d, i) {
+      // this is overkill if duration is 0
+      d3.active(this).tween("text", function () {
+        return function (t) {
+          trim_text(d3.select(this), yAxis);
+        };
+      });
+    }
   }
 
   function chart(selection) {
@@ -127,8 +146,8 @@ export default function () {
         tasks
           .attr("transform", (d) => translate(xScale(starts(d)), yScale(labels(d))))
           .selectAll("rect")
-          .attr("width", (d) => xScale(ends(d)) - xScale(starts(d)))
-          .call(trim_text);
+          .attr("width", (d) => xScale(ends(d)) - xScale(starts(d)) || milestone_width)
+          .call(d => trim_text(d, yAxis));
 
         yGroup.call(yAxis.draw_ticks, xScale.ticks().map(xScale));
       });
@@ -158,7 +177,7 @@ export default function () {
         .attr("text-anchor", "start")
         // .attr('fill', d => textColor(cScale(names(d))))
         // .attr('fill', compose(textColor, cScale, names))
-        .attr("fill", pipe(names, cScale, textColor))
+        .attr("fill", d => ends(d) - starts(d) ? pipe(names, cScale, textColor)(d) : 'black')
         .attr("pointer-events", "none")
         .attr("dx", padding)
         .attr("y", yScale.bandwidth() / 2)
@@ -177,8 +196,8 @@ export default function () {
         .duration(duration)
         .attr("transform", (d) => translate(xScale(starts(d)), yScale(labels(d))))
         .selectAll("rect")
-        .attr("width", (d) => xScale(ends(d)) - xScale(starts(d)))
-        .on("start", tween_text);
+        .attr("width", (d) => xScale(ends(d)) - xScale(starts(d)) || milestone_width)
+        .on("start", tween_text(yAxis));
 
       if (today)
         g.append("path")
@@ -203,6 +222,9 @@ export default function () {
   chart.padding = function (_) {
     return arguments.length ? ((padding = _), chart) : padding;
   };
+  chart.milestone_width = function (_) {
+    return arguments.length ? ((milestone_width = _), chart) : milestone_width;
+  };
   chart.reversed = function (_) {
     return arguments.length ? ((reversed = _), chart) : reversed;
   };
@@ -213,17 +235,10 @@ export default function () {
   return chart;
 
   function tooltip_html(event, d) {
-    const format = pipe(d3.isoParse, d3.timeFormat("%Y-%m-%d"));
-    return (
-      "<b>" +
-      names(d) +
-      "</b>" +
-      '<hr style="margin: 2px 0 2px 0">' +
-      format(starts(d)) +
-      " - " +
-      format(ends(d)) +
-      "<br>" +
-      durationFormat(starts(d), ends(d))
-    );
+    const format = pipe(d3.isoParse, d3.timeFormat("%Y-%m-%d")),
+      header = `<b>${names(d)}</b><hr style="margin: 2px 0 2px 0">${format(starts(d))}`,
+      body = ends(d) - starts(d) ? ` - ${format(ends(d))}<br>${durationFormat(starts(d), ends(d))}` : "";
+
+    return header + body;
   }
 }

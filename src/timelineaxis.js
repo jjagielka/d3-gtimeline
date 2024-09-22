@@ -16,6 +16,7 @@ const right = 1,
 
 function timelineAxis(orient, scale) {
   let colors = ["#FFF", "#EEE"], // alternate rows colors
+    colorscale = d3.scaleOrdinal(colors),
     padding = 5,
     range,
     line_color = "#AAA",
@@ -123,7 +124,9 @@ function timelineAxis(orient, scale) {
   axis.offset = function (_) {
     return arguments.length ? ((offset = _), axis) : offset;
   };
-
+  axis.colorscale = function (_) {
+    return arguments.length ? ((colorscale = _), axis) : colorscale;
+  };
   return axis;
 }
 

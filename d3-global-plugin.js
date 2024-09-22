@@ -9,10 +9,12 @@ export default (fileName) => ({
       if (err) {
         return console.log(err);
       }
-      var result = data.replace(/(\w+\.d3)={}/g, "$1=$1||{}");
+      const result = data.replace(/(\w+\.d3)={}/g, "$1=$1||{}");
 
       fs.writeFile(fullFileName, result, "utf8", function (err) {
-        if (err) return console.log(err);
+        if (err) {
+          return console.log(err);
+        }
       });
     });
   },
